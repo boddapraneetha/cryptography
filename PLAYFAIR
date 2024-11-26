@@ -1,0 +1,50 @@
+def create_matrix(key):
+    alphabet = "abcdefghiklmnopqrstuvwxyz"
+    key = "".join(dict.fromkeys(key + alphabet))
+    matrix = [key[i:i+5] for i in range(0, 25, 5)]
+    return matrix
+def find_position(matrix, char):
+    for row_idx, row in enumerate(matrix):
+        if char in row:
+            return (row_idx, row.index(char))
+    return None
+def process_pairs(text, mode, matrix):
+    pairs = []
+    text = text.replace("j", "i")
+    i = 0
+    while i < len(text):
+        if i + 1 < len(text) and text[i] != text[i + 1]:
+            pairs.append(text[i] + text[i + 1])
+            i += 2
+        else:
+            pairs.append(text[i] + "x")
+            i += 1
+    result = ""
+    for pair in pairs:
+        row1, col1 = find_position(matrix, pair[0])
+        row2, col2 = find_position(matrix, pair[1])
+        if row1 == row2:
+            if mode == "encrypt":
+                result += matrix[row1][(col1 + 1) % 5] + matrix[row2][(col2 + 1) % 5]
+            else:
+                result += matrix[row1][(col1 - 1) % 5] + matrix[row2][(col2 - 1) % 5]
+        elif col1 == col2:
+            if mode == "encrypt":
+                result += matrix[(row1 + 1) % 5][col1] + matrix[(row2 + 1) % 5][col2]
+            else:
+                result += matrix[(row1 - 1) % 5][col1] + matrix[(row2 - 1) % 5][col2]
+        else:
+            result += matrix[row1][col2] + matrix[row2][col1]
+    return result
+def playfair_encrypt_decrypt():
+    key = input("Enter the encryption key: ").lower().replace(" ", "")
+    message = input("Enter the message: ").lower().replace(" ", "")
+    matrix = create_matrix(key)
+    print("\nPlayfair Cipher Matrix:")
+    for row in matrix:
+        print(" ".join(row))
+    cipher_text = process_pairs(message, "encrypt", matrix)
+    print(f"\nEncrypted Message (Cipher Text): {cipher_text}")
+    decrypted_text = process_pairs(cipher_text, "decrypt", matrix)
+    print(f"Decrypted Message: {decrypted_text.rstrip('x')}")
+playfair_encrypt_decrypt()
