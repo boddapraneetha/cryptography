@@ -1,0 +1,25 @@
+from Crypto.Cipher import DES
+from Crypto.Random import get_random_bytes
+from Crypto.Protocol.KDF import scrypt
+import binascii
+class DES_Encryption:
+    def __init__(self):
+        self.key = self.generate_symmetric_key()
+        self.input_message = input("Enter message to encrypt: ")
+        encrypted_data = self.encrypt(self.input_message.encode())
+        print(f"Encrypted Message: {binascii.hexlify(encrypted_data)}")
+        decrypted_message = self.decrypt(encrypted_data).decode()
+        print(f"Decrypted Message: {decrypted_message}")
+    def generate_symmetric_key(self):
+        return get_random_bytes(8)
+    def encrypt(self, clear):
+        while len(clear) % 8 != 0:
+            clear += b' '
+        cipher = DES.new(self.key, DES.MODE_ECB)
+        return cipher.encrypt(clear)
+    def decrypt(self, encrypted):
+        cipher = DES.new(self.key, DES.MODE_ECB)
+        decrypted = cipher.decrypt(encrypted).strip()
+        return decrypted
+if __name__ == "__main__":
+    DES_Encryption()
