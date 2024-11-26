@@ -1,0 +1,32 @@
+import numpy as np
+
+def hill_encrypt(plaintext, key_matrix):
+    plaintext = plaintext.replace(" ", "").lower()  
+    if len(plaintext) % 2 != 0:
+        plaintext += 'x'  
+    ciphertext = ""
+    for i in range(0, len(plaintext), 2):
+        block = np.array([[ord(plaintext[i]) - 97], [ord(plaintext[i + 1]) - 97]])  
+        encrypted = np.dot(key_matrix, block) % 26  
+        ciphertext += chr(encrypted[0][0] + 97) + chr(encrypted[1][0] + 97)  
+    return ciphertext
+
+def hill_decrypt(ciphertext, key_matrix):
+    det = int(np.linalg.det(key_matrix)) % 26
+    det_inv = pow(det, -1, 26)  
+    adj_matrix = np.array([[key_matrix[1][1], -key_matrix[0][1]], [-key_matrix[1][0], key_matrix[0][0]]])  
+    inv_key_matrix = (det_inv * adj_matrix) % 26  
+    plaintext = ""
+    for i in range(0, len(ciphertext), 2):
+        block = np.array([[ord(ciphertext[i]) - 97], [ord(ciphertext[i + 1]) - 97]])  
+        decrypted = np.dot(inv_key_matrix, block) % 26  
+        plaintext += chr(decrypted[0][0] + 97) + chr(decrypted[1][0] + 97)  
+    return plaintext
+
+key_matrix = np.array([[9, 4], [5, 7]])  
+plaintext = "meet me at the usual place at ten rather than eight oclock"
+ciphertext = hill_encrypt(plaintext, key_matrix)
+decrypted_text = hill_decrypt(ciphertext, key_matrix)
+
+print(f"Encrypted text: {ciphertext}")
+print(f"Decrypted text: {decrypted_text}")
