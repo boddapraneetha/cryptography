@@ -1,0 +1,19 @@
+def diffie_hellman_user_input():
+    n = int(input("Enter a prime number (n): "))
+    g = int(input(f"Enter a primitive root modulo {n} (g): "))
+    x = int(input("Enter private key for Party A (x): "))
+    y = int(input("Enter private key for Party B (x): "))
+    public_key_a = pow(g, x, n)
+    public_key_b = pow(g, y, n)
+    print(f"\nPublic key of Party YA (A_public): {public_key_a}")
+    print(f"Public key of Party YB (B_public): {public_key_b}")
+    shared_secret_a = pow(public_key_b, x, n)
+    shared_secret_b = pow(public_key_a, y, n)
+    print(f"\nShared secret computed by Party A: {shared_secret_a}")
+    print(f"Shared secret computed by Party B: {shared_secret_b}")
+    if shared_secret_a == shared_secret_b:
+        print(f"\nKey exchange successful! Shared secret: {shared_secret_a}")
+    else:
+        print("Key exchange failed! Shared secrets do not match.")
+if __name__ == "__main__":
+    diffie_hellman_user_input()
