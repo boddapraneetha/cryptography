@@ -1,0 +1,22 @@
+def vigenere_cipher(message, keyword, mode):
+    message = message.upper()
+    keyword = (keyword.upper() * ((len(message) // len(keyword)) + 1))[:len(message)]
+    result = []
+    for m, k in zip(message, keyword):
+        if m.isalpha():
+            shift = ord(k) - 65
+            if mode == 'encrypt':
+                result.append(chr(((ord(m) - 65 + shift) % 26) + 65))
+            elif mode == 'decrypt':
+                result.append(chr(((ord(m) - 65 - shift) % 26) + 65))
+        else:
+            result.append(m)
+    return ''.join(result)
+if __name__ == "__main__":
+    operation = input("Select operation (encrypt/decrypt): ").strip().lower()
+    if operation not in ['encrypt', 'decrypt']:
+        print("Invalid operation. Please choose 'encrypt' or 'decrypt'.")
+    else:
+        message = input("Enter the message: ")
+        keyword = input("Enter the keyword: ")
+        print(f"Result: {vigenere_cipher(message, keyword, operation)}")  
