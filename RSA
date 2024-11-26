@@ -1,0 +1,35 @@
+from sympy import mod_inverse
+
+def generate_rsa_keys():
+    p, q = 61, 53  
+    n = p * q  
+    phi_n = (p - 1) * (q - 1)  
+    e = 17  
+    d = mod_inverse(e, phi_n)  
+    return (e, n), (d, n)
+
+def encrypt(public_key, plaintext):
+    e, n = public_key
+    m = int.from_bytes(plaintext.encode(), 'big')  
+    return pow(m, e, n)  
+
+def decrypt(private_key, ciphertext):
+    d, n = private_key
+    m = pow(ciphertext, d, n)  
+    return m.to_bytes((m.bit_length() + 7) // 8, 'big').decode()  
+
+def rsa_simulation():
+    public_key, private_key = generate_rsa_keys()
+    
+    print(f"Public key: {public_key}")
+    print(f"Private key (leaked): {private_key}")
+
+    message = "Hello Bob!"
+    print(f"Original message: {message}")
+    
+    ciphertext = encrypt(public_key, message)
+    print(f"Ciphertext: {ciphertext}")
+    decrypted_message = decrypt(private_key, ciphertext)
+    print(f"Decrypted message: {decrypted_message}")
+
+rsa_simulation()
