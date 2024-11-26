@@ -1,0 +1,14 @@
+def monoalphabetic_cipher(text, alphabet, cipher):
+    table = str.maketrans(alphabet, cipher)
+    return text.translate(table)
+
+alphabet = "abcdefghijklmnopqrstuvwxyz"
+cipher = "qwertyuiopasdfghjklzxcvbnm"
+
+text = input("Enter the text: ")
+
+encrypted = monoalphabetic_cipher(text.lower(), alphabet, cipher)
+print("Encrypted text:", encrypted)
+
+decrypted = monoalphabetic_cipher(encrypted, cipher, alphabet)
+print("Decrypted text:", decrypted)
