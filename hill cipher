@@ -1,32 +1,20 @@
 import numpy as np
 
-def hill_encrypt(plaintext, key_matrix):
-    plaintext = plaintext.replace(" ", "").lower()  
-    if len(plaintext) % 2 != 0:
-        plaintext += 'x'  
-    ciphertext = ""
-    for i in range(0, len(plaintext), 2):
-        block = np.array([[ord(plaintext[i]) - 97], [ord(plaintext[i + 1]) - 97]])  
-        encrypted = np.dot(key_matrix, block) % 26  
-        ciphertext += chr(encrypted[0][0] + 97) + chr(encrypted[1][0] + 97)  
-    return ciphertext
+a = np.array([[6, 24, 1], [13, 16, 10], [20, 17, 15]])
+b = np.array([[8, 5, 10], [21, 8, 21], [21, 12, 8]])
 
-def hill_decrypt(ciphertext, key_matrix):
-    det = int(np.linalg.det(key_matrix)) % 26
-    det_inv = pow(det, -1, 26)  
-    adj_matrix = np.array([[key_matrix[1][1], -key_matrix[0][1]], [-key_matrix[1][0], key_matrix[0][0]]])  
-    inv_key_matrix = (det_inv * adj_matrix) % 26  
-    plaintext = ""
-    for i in range(0, len(ciphertext), 2):
-        block = np.array([[ord(ciphertext[i]) - 97], [ord(ciphertext[i + 1]) - 97]])  
-        decrypted = np.dot(inv_key_matrix, block) % 26  
-        plaintext += chr(decrypted[0][0] + 97) + chr(decrypted[1][0] + 97)  
-    return plaintext
+def text_to_numbers(msg):
+    return [ord(char) - 65 for char in msg]
 
-key_matrix = np.array([[9, 4], [5, 7]])  
-plaintext = "meet me at the usual place at ten rather than eight oclock"
-ciphertext = hill_encrypt(plaintext, key_matrix)
-decrypted_text = hill_decrypt(ciphertext, key_matrix)
+def numbers_to_text(nums):
+    return ''.join([chr(num + 65) for num in nums])
 
-print(f"Encrypted text: {ciphertext}")
-print(f"Decrypted text: {decrypted_text}")
+msg = input("Enter plain text: ").upper()
+
+c = text_to_numbers(msg)
+
+d = np.dot(a, c) % 26
+print(f"Encrypted Cipher Text: {numbers_to_text(d)}")
+
+c = np.dot(b, d) % 26
+print(f"Decrypted Cipher Text: {numbers_to_text(c)}")
