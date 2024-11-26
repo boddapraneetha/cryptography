@@ -1,18 +1,15 @@
-def caesar_cipher(text, k):
+def caesar_cipher(text, shift):
     result = ""
     for char in text:
         if char.isalpha():
             start = ord('A') if char.isupper() else ord('a')
-            result += chr((ord(char) - start + k) % 26 + start)
+            result += chr((ord(char) - start + shift) % 26 + start)
         else:
             result += char
     return result
-
-text = input("Enter the text: ")
-k = int(input("Enter the shift key (1-25): "))
-
-encrypted = caesar_cipher(text, k)
-print("Encrypted text:", encrypted)
-
-decrypted = caesar_cipher(encrypted, -k)
-print("Decrypted text:", decrypted)
+plaintext = "blessy"
+shift = 3
+encrypted = caesar_cipher(plaintext, shift)
+print("Encrypted:", encrypted)
+decrypted = caesar_cipher(encrypted, -shift)
+print("Decrypted:", decrypted)
